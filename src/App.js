@@ -1,25 +1,66 @@
-//import logo from './logo.svg';
 import './App.css';
+import {
+    Button,
+    Typography,
+    Card,
+    CardActions,
+    CardContent,
+    IconButton,
+} from '@material-ui/core';
+import {
+    Home,
+    NightsStay
+} from "@material-ui/icons";
+import { makeStyles } from '@material-ui/core/styles';
+import StickyFooter from "./StickyFooter";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
-function App() {
+
+export default function App() {
+    const classes = useStyles();
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <CssBaseline />
+        <Card className={classes.root} elevation={3}>
+            <CardActions>
+                <div className={classes.actions}>
+                    <IconButton> <NightsStay/> </IconButton>
+                    <IconButton> <Home/> </IconButton>
+                </div>
+            </CardActions>
+            <CardContent className={classes.content}>
+                <Typography className={classes.title} variant="h1" gutterBottom>
+                    Say Hello to <br />
+                    Logistic Regression
+                </Typography>
+            </CardContent>
+            <CardActions>
+                <div className={classes.bottomButton}>
+                    <Button size="medium" >Next</Button>
+                    <Button size="medium" align='center'>Skip Explanation</Button>
+                </div>
+            </CardActions>
+        </Card>
+        <StickyFooter/>
     </div>
   );
 }
 
-export default App;
+const useStyles = makeStyles((theme) => ({
+    root: {
+        minWidth: 275,
+    },
+    title: {
+        fontSize: 40,
+    },
+    content: {
+        marginTop: 50,
+        marginBottom: 50,
+    },
+    actions: {
+        marginLeft: 'auto',
+    },
+    bottomButton: {
+        marginLeft: 'auto',
+    }
+}));
