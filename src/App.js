@@ -1,66 +1,24 @@
 import './App.css';
-import {
-    Button,
-    Typography,
-    Card,
-    CardActions,
-    CardContent,
-    IconButton,
-} from '@material-ui/core';
-import {
-    Home,
-    NightsStay
-} from "@material-ui/icons";
-import { makeStyles } from '@material-ui/core/styles';
-import StickyFooter from "./StickyFooter";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import {Component} from "react";
+import {BrowserRouter, Route} from 'react-router-dom';
+import Main from './Main';
+import Next from './Next';
+import ChooseData from './ChooseData';
+import EditData from './EditData';
+import Weight from './Weight';
 
-
-export default function App() {
-    const classes = useStyles();
-  return (
-    <div className="App">
-        <CssBaseline />
-        <Card className={classes.root} elevation={3}>
-            <CardActions>
-                <div className={classes.actions}>
-                    <IconButton> <NightsStay/> </IconButton>
-                    <IconButton> <Home/> </IconButton>
-                </div>
-            </CardActions>
-            <CardContent className={classes.content}>
-                <Typography className={classes.title} variant="h1" gutterBottom>
-                    Say Hello to <br />
-                    Logistic Regression
-                </Typography>
-            </CardContent>
-            <CardActions>
-                <div className={classes.bottomButton}>
-                    <Button size="medium" >Next</Button>
-                    <Button size="medium" align='center'>Skip Explanation</Button>
-                </div>
-            </CardActions>
-        </Card>
-        <StickyFooter/>
-    </div>
-  );
-}
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        minWidth: 275,
-    },
-    title: {
-        fontSize: 40,
-    },
-    content: {
-        marginTop: 50,
-        marginBottom: 50,
-    },
-    actions: {
-        marginLeft: 'auto',
-    },
-    bottomButton: {
-        marginLeft: 'auto',
+export default class App extends Component {
+    render() {
+        return(
+            <div>
+                <BrowserRouter>
+                    <Route path="/" exact component={Main} />
+                    <Route path="/Next" component={Next} />
+                    <Route path="/ChooseData" component={ChooseData} />
+                    <Route path="/EditData" component={EditData} />
+                    <Route path="/Weight" component={Weight} />
+                </BrowserRouter>
+            </div>
+        )
     }
-}));
+}
