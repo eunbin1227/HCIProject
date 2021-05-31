@@ -36,8 +36,8 @@ export default function Main() {
             </CardContent>
             <CardActions>
                 <div className={classes.bottomButton}>
-                    <Button size="medium" component={Link} to="/ChooseData">Next</Button>
-                    <Button size="medium" align='center'>Skip Explanation</Button>
+                    <Button size="medium" component={Link} to="/Explanation">Next</Button>
+                    <Button size="medium" component={Link} to="/ChooseData">Skip Explanation</Button>
                 </div>
             </CardActions>
         </Card>

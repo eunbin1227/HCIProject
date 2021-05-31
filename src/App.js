@@ -6,6 +6,7 @@ import Next from './Next';
 import ChooseData from './ChooseData';
 import EditData from './EditData';
 import Weight from './Weight';
+import Explanation from './Explanation';
 
 export default class App extends Component {
     render() {
@@ -17,6 +18,7 @@ export default class App extends Component {
                     <Route path="/ChooseData" component={ChooseData} />
                     <Route path="/EditData" component={EditData} />
                     <Route path="/Weight" component={Weight} />
+                    <Route path="/Explanation" component={Explanation} />
                 </BrowserRouter>
             </div>
         )
