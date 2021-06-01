@@ -12,7 +12,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 you should install:
 
-### `@material-ui/core`, ### `@material-ui/icons`
+### `@material-ui/core`, `@material-ui/icons`
 
 
 ## To use the UI
