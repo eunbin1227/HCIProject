@@ -18,6 +18,7 @@ import StickyFooter from "./StickyFooter";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {Link} from 'react-router-dom';
 import React from 'react';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 
 export default function ChooseData() {
@@ -29,6 +30,8 @@ export default function ChooseData() {
     };
 
     return (
+    <ThemeProvider theme={theme}>
+
         <div className="App">
             <CssBaseline />
             <Card className={classes.root} elevation={3}>
@@ -69,40 +72,69 @@ export default function ChooseData() {
                 </CardContent>
                 <CardActions>
                     <div className={classes.bottomButton}>
-                        <Button size="large" component={Link} to="/EditData">Next</Button>
+                        <Button className={classes.prevButton} size="large" component={Link} to="/Explanation">prev</Button>
+                        <Button className={classes.nextButton} size="large" component={Link} to="/EditData">next</Button>
                     </div>
                 </CardActions>
+                <StickyFooter/>
             </Card>
-            <StickyFooter/>
         </div>
+    </ThemeProvider>
     );
 }
 
 const useStyles = makeStyles((theme) => ({
     root: {
         minWidth: 275,
+        display: 'grid',
+        minHeight: '100vh',
+    },
+    actions: {
+        position: 'absolute',
+        right: '1vw',
+        top: '1vh',
+//        backgroundColor: 'yellow',
     },
     title: {
         fontSize: 40,
+        fontWeight: 500,
     },
     contains: {
         fontSize: 20,
     },
     content: {
+        height: '80vh',
         marginTop: 0,
-        marginBottom: 50,
-    },
-    actions: {
-        marginLeft: 'auto',
+        display: 'grid',
+        placeContent: 'center',
     },
     bottomButton: {
         marginLeft: 'auto',
+    },
+    prevButton: {
+        fontSize: 18,
+        textTransform: "none",
+        marginRight: '2vw',
+    },
+    nextButton: {
+        fontSize: 18,
+        textTransform: "none",
+        marginRight: "3vw",
     },
     formControl: {
         margin: theme.spacing(1),
         minWidth: 120,
     },
     selectEmpty: {
-        marginTop: theme.spacing(2),
+        marginTop: theme.spacing(3),
     }
 }));
+
+
+const theme = createMuiTheme({
+    typography: {
+      fontFamily: [
+          'Noto Sans KR', 'sans-serif'
+      ].join(','),
+    },
+});

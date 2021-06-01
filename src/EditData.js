@@ -17,6 +17,8 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import {Link} from 'react-router-dom';
 import React from 'react';
 
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
 
 export default function EditData() {
     const classes = useStyles();
@@ -51,6 +53,10 @@ export default function EditData() {
 
 
     return (
+
+        
+    <ThemeProvider theme={theme}>
+
         <div className="App">
             <CssBaseline />
             <Card className={classes.root} elevation={3}>
@@ -67,14 +73,13 @@ export default function EditData() {
                     <div>
                         <Typography id="discrete-slider-custom" className={classes.contains} variant="h2" gutterBottom>
                             Slide to choose appropriate size
-                            <br/> <br/>
-                            Maximum dataset size: 100
-                            <br/>
+                            <br/><br/><br/>
+                            Max: 100,&ensp;
                             {/*Current dataset size : {size}*/}
-                            Current dataset size : 62
+                            Current size : 62
                             <br/>
                         </Typography>
-                        <Slider
+                        <Slider className={classes.slider}
                             defaultValue={62}
                             getAriaValueText={valuetext}
                             aria-labelledby="discrete-slider-custom"
@@ -86,34 +91,65 @@ export default function EditData() {
                 </CardContent>
                 <CardActions>
                     <div className={classes.bottomButton}>
-                        <Button size="large" component={Link} to="/Weight">Next</Button>
+                        <Button className={classes.prevButton} size="large" component={Link} to="/ChooseData">prev</Button>
+                        <Button className={classes.nextButton} size="large" component={Link} to="/WeightData">next</Button>
                     </div>
                 </CardActions>
+                <StickyFooter/>
             </Card>
-            <StickyFooter/>
         </div>
+        </ThemeProvider>
     );
 }
+
+
+const theme = createMuiTheme({
+    typography: {
+      fontFamily: [
+          'Noto Sans KR', 'sans-serif'
+      ].join(','),
+    },
+});
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
         minWidth: 275,
+        display: 'grid',
+        minHeight: '100vh',
+
     },
     title: {
         fontSize: 40,
     },
     contains: {
         fontSize: 20,
+        paddingBottom: '10vh',
     },
     content: {
+        height: '75vh',
         marginTop: 0,
-        marginBottom: 50,
+        display: 'grid',
+        placeContent: 'center',
+    },
+    slider: {
+        width: '50vw',
     },
     actions: {
         marginLeft: 'auto',
     },
     bottomButton: {
         marginLeft: 'auto',
+    },
+    prevButton: {
+        fontSize: 18,
+        textTransform: "none",
+        marginRight: '2vw',
+    },
+    nextButton: {
+        fontSize: 18,
+        textTransform: "none",
+        marginRight: "3vw",
     },
     formControl: {
         margin: theme.spacing(1),
