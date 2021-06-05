@@ -9,38 +9,50 @@ import {Card, CardActions, CardContent, IconButton} from "@material-ui/core";
 import {Home, Help} from "@material-ui/icons";
 import {Link} from "react-router-dom";
 import StickyFooter from "./StickyFooter";
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: '100%',
-        backgroundColor: theme.palette.background.paper,
+        minWidth: 275,
+        display: 'grid',
+        minHeight: '100vh',
     },
     chip: {
-        margin: theme.spacing(0.5),
+        margin: theme.spacing(1),
     },
     section1: {
-        margin: theme.spacing(3, 2),
-
+        margin: theme.spacing(4),
     },
     section2: {
-        margin: theme.spacing(2),
-    },
-    section3: {
-        margin: theme.spacing(3, 1, 1),
+        margin: theme.spacing(4),
     },
     content: {
+        height: '80vh',
         marginTop: 0,
-        marginBottom: 50,
+        display: 'grid',
+        placeContent: 'center',
     },
     actions: {
-        marginLeft: 'auto',
+        position: 'absolute',
+        right: '1vw',
+        top: '1vh',
     },
     title: {
-        fontSize: 30,
-        alignContent: 'center'
+        fontSize: 40,
+        alignContent: 'center',
     },
     bottomButton: {
         marginLeft: 'auto',
+    },
+    prevButton: {
+        fontSize: 18,
+        textTransform: "none",
+        marginRight: '2vw',
+    },
+    nextButton: {
+        fontSize: 18,
+        textTransform: "none",
+        marginRight: "3vw",
     },
 }));
 
@@ -48,6 +60,9 @@ export default function Weight() {
     const classes = useStyles();
 
     return (
+
+        <ThemeProvider theme={theme}>
+
         <div className='App'>
             <Card className={classes.root} elevation={3}>
                 <CardActions>
@@ -61,12 +76,13 @@ export default function Weight() {
                         <Grid container alignItems="center">
                             <Grid item xs>
                                 <Typography gutterBottom variant="h2" className={classes.title}>
-                                    Choose index to give more weight <br/>
+                                    3. Choose index to give more weight <br/>
                                 </Typography>
                             </Grid>
                         </Grid>
                     </div>
-                    <Divider variant="middle" />
+{/*                    <Divider variant="middle"/>
+*/}
                     <div className={classes.section2}>
                         <Typography gutterBottom variant="body1">
                             Select index <br/>
@@ -82,12 +98,24 @@ export default function Weight() {
                 </CardContent>
                 <CardActions>
                     <div className={classes.bottomButton}>
-                        <Button size="medium" component={Link} to="/ChooseData">Next</Button>
-                        <Button size="medium" align='center'>Skip Explanation</Button>
+                        <Button className={classes.prevButton} size="large" component={Link} to="/EditData">prev</Button>
+                        <Button className={classes.nextButton} size="large" component={Link} to="/">next</Button>
                     </div>
                 </CardActions>
+                <StickyFooter/>
             </Card>
-            <StickyFooter/>
         </div>
+
+        </ThemeProvider>
     );
 }
+
+
+
+const theme = createMuiTheme({
+    typography: {
+      fontFamily: [
+          'Noto Sans KR', 'sans-serif'
+      ].join(','),
+    },
+});
