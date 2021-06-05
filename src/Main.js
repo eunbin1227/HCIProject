@@ -57,30 +57,30 @@ const useStyles = makeStyles((theme) => ({
     root: {
         minWidth: 275,
         display: 'grid',
-        maxHeight: '100vh',
+        minHeight: '100vh',
 //       backgroundColor: 'pink',
     },
     actions: {
         position: 'absolute',
         right: '1vw',
         top: '1vh',
-  //      backgroundColor: 'yellow',
+//        backgroundColor: 'yellow',
     },
     title: {
         fontSize: 70,
         textAlign: "center",
-    //    backgroundColor: 'blue',
+//        backgroundColor: 'blue',
     },
     content: {
         height: '65vh',
         display: 'grid',
         placeItems: 'center',
- //       backgroundColor: 'grey',
+//        backgroundColor: 'grey',
     },
     bottomButton: {
         marginTop: '15vh',
         marginLeft: 'auto',
-   //     backgroundColor: 'red',
+//        backgroundColor: 'red',
     },
     nextButton: {
         fontSize: 18,

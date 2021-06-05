@@ -117,6 +117,10 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 275,
         display: 'grid',
         minHeight: '100vh',
+<<<<<<< HEAD
+=======
+
+>>>>>>> be2943bd1caf3b9e4ef79a13b6f87d0f0085a094
     },
     title: {
         fontSize: 40,
@@ -126,7 +130,11 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: '10vh',
     },
     content: {
+<<<<<<< HEAD
         height: '70vh',
+=======
+        height: '75vh',
+>>>>>>> be2943bd1caf3b9e4ef79a13b6f87d0f0085a094
         marginTop: 0,
         display: 'grid',
         placeContent: 'center',
