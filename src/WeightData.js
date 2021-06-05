@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(4),
     },
     content: {
-        height: '80vh',
+        height: '75vh',
         marginTop: 0,
         display: 'grid',
         placeContent: 'center',

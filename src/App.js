@@ -17,7 +17,7 @@ export default class App extends Component {
                     <Route path="/Next" component={Next} />
                     <Route path="/ChooseData" component={ChooseData} />
                     <Route path="/EditData" component={EditData} />
-                    <Route path="/Weight" component={WeightData} />
+                    <Route path="/WeightData" component={WeightData} />
                     <Route path="/Explanation" component={Explanation} />
                 </BrowserRouter>
             </div>

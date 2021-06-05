@@ -126,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: '10vh',
     },
     content: {
-        height: '75vh',
+        height: '70vh',
         marginTop: 0,
         display: 'grid',
         placeContent: 'center',
@@ -135,7 +135,9 @@ const useStyles = makeStyles((theme) => ({
         width: '50vw',
     },
     actions: {
-        marginLeft: 'auto',
+        position: 'absolute',
+        right: '1vw',
+        top: '1vh',
     },
     bottomButton: {
         marginLeft: 'auto',
