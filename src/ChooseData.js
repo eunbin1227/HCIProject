@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 20,
     },
     content: {
-        height: '80vh',
+        height: '75vh',
         marginTop: 0,
         display: 'grid',
         placeContent: 'center',

@@ -117,7 +117,6 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 275,
         display: 'grid',
         minHeight: '100vh',
-
     },
     title: {
         fontSize: 40,
@@ -136,7 +135,9 @@ const useStyles = makeStyles((theme) => ({
         width: '50vw',
     },
     actions: {
-        marginLeft: 'auto',
+        position: 'absolute',
+        right: '1vw',
+        top: '1vh',
     },
     bottomButton: {
         marginLeft: 'auto',

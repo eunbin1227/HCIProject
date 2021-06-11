@@ -80,7 +80,6 @@ const useStyles = makeStyles((theme) => ({
     bottomButton: {
         marginTop: '15vh',
         marginLeft: 'auto',
-
 //        backgroundColor: 'red',
     },
     nextButton: {
