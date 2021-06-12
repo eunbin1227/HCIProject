@@ -16,6 +16,7 @@ import {Link} from "react-router-dom";
 import {Help, Home} from "@material-ui/icons";
 import StickyFooter from "./StickyFooter";
 import {theme} from "./theme";
+import { firestore } from './firebase';
 
 
 const labels = {
@@ -81,10 +82,16 @@ const useStyles = makeStyles({
 export default function Feedback() {
     const [value, setValue] = React.useState(2);
     const [hover, setHover] = React.useState(-1);
+    const [text, setText] = React.useState('');
     const classes = useStyles();
 
-    const handleSubmit = () => {
-
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        firestore
+            .collection("Feedback")
+            .add({rating: {value}, feedbackText: {text}})
+            .then(() => {
+            })
     }
 
     return (
@@ -131,6 +138,7 @@ export default function Feedback() {
                                     rows={10}
                                     defaultValue="의견을 남겨주세요!"
                                     variant="outlined"
+                                    onChange={(e) => setText(e.target.value)}
                                 />
                                 <Button type="submit"> Submit </Button>
                             </form>
