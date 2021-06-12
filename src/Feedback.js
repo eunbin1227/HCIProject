@@ -18,7 +18,6 @@ import StickyFooter from "./StickyFooter";
 import {theme} from "./theme";
 import { firestore } from './firebase';
 
-
 const labels = {
     0.5: 'Useless',
     1: 'Useless+',

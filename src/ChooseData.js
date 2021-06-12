@@ -19,6 +19,7 @@ import { makeStyles, ThemeProvider} from '@material-ui/core/styles';
 import StickyFooter from "./StickyFooter";
 import {Link} from 'react-router-dom';
 import { theme } from "./theme";
+import { firestore } from "./firebase";
 
 
 export default function ChooseData() {
@@ -29,9 +30,29 @@ export default function ChooseData() {
         setData(event.target.value);
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(data);
+        firestore
+            .collection('Data')
+            .add({data})
+            .then()
+    }
+
+    const addFile = (e) => {
+        e.preventDefault();
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = async (progressEvent) => {
+            const data = await progressEvent.target.result;
+            setData(data);
+        }
+        reader.readAsText(file);
+    }
+
     return (
     <ThemeProvider theme={theme}>
-
         <div className="App">
             <CssBaseline />
             <Card className={classes.root} elevation={3}>
@@ -42,33 +63,43 @@ export default function ChooseData() {
                     </div>
                 </CardActions>
                 <CardContent className={classes.content}>
-                    <Typography className={classes.title} variant="h1" gutterBottom>
-                        1. Choose Dataset <br/> <br/>
-                    </Typography>
-                    <Button variant="contained" component="label">
-                        Upload File
-                        <input type="file" hidden/>
-                    </Button>
-                    <Typography className={classes.contains} variant="h2" gutterBottom>
-                        <br/> <br/>
-                        * Example Dataset
-                    </Typography>
-                    <FormControl className={classes.formControl}>
-                        <Select
-                            value={data}
-                            onChange={handleChange}
-                            displayEmpty
-                            className={classes.selectEmpty}
-                            inputProps={{ 'aria-label': 'Without label' }}
-                        >
-                            <MenuItem value="">
-                                <em>Choose Data</em>
-                            </MenuItem>
-                            <MenuItem value={'CarAccident'}>CarAccident</MenuItem>
-                            <MenuItem value={'Disease'}>Disease</MenuItem>
-                            <MenuItem value={'StockPrice'}>StockPrice</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <form onSubmit={handleSubmit}>
+                        <Typography className={classes.title} variant="h1" gutterBottom>
+                            1. Choose Dataset <br/> <br/>
+                        </Typography>
+                        <Button variant="contained" component="label">
+                            Upload File
+                            <input
+                                type="file"
+                                onChange={addFile}
+                                hidden/>
+                        </Button>
+
+                        <Typography className={classes.contains} variant="h2" gutterBottom>
+                            <br/> <br/>
+                            * Example Dataset
+                        </Typography>
+                        <div className={classes.lower}>
+                            <FormControl className={classes.formControl}>
+                                <Select
+                                    value={data}
+                                    onChange={handleChange}
+                                    displayEmpty
+                                    className={classes.selectEmpty}
+                                    inputProps={{ 'aria-label': 'Without label' }}
+                                >
+                                    <MenuItem value="">
+                                        <em>Choose Data</em>
+                                    </MenuItem>
+                                    <MenuItem value={'CarAccident'}>CarAccident</MenuItem>
+                                    <MenuItem value={'Disease'}>Disease</MenuItem>
+                                    <MenuItem value={'StockPrice'}>StockPrice</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <Button type="submit"> Submit </Button>
+                        </div>
+                    </form>
+
                 </CardContent>
                 <CardActions>
                     <div className={classes.bottomButton}>
@@ -127,6 +158,10 @@ const useStyles = makeStyles((theme) => ({
     },
     selectEmpty: {
         marginTop: theme.spacing(3),
+    },
+    lower: {
+        display: 'flex',
+        flexDirection: 'column',
     }
 }));
 
