@@ -1,4 +1,6 @@
+import React from 'react';
 import {
+    CssBaseline,
     Button,
     Typography,
     Card,
@@ -13,12 +15,10 @@ import {
     Home,
     Help
 } from "@material-ui/icons";
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider} from '@material-ui/core/styles';
 import StickyFooter from "./StickyFooter";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import {Link} from 'react-router-dom';
-import React from 'react';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { theme } from "./theme";
 
 
 export default function ChooseData() {
@@ -130,11 +130,3 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
-const theme = createMuiTheme({
-    typography: {
-      fontFamily: [
-          'Noto Sans KR', 'sans-serif'
-      ].join(','),
-    },
-});
