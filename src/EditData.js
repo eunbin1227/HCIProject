@@ -1,4 +1,6 @@
+import React from 'react';
 import {
+    CssBaseline,
     Button,
     Typography,
     Card,
@@ -13,11 +15,9 @@ import {
 } from "@material-ui/icons";
 import { makeStyles } from '@material-ui/core/styles';
 import StickyFooter from "./StickyFooter";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import {Link} from 'react-router-dom';
-import React from 'react';
-
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
 
 
 export default function EditData() {

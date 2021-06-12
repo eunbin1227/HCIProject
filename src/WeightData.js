@@ -1,15 +1,19 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Chip from '@material-ui/core/Chip';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-import {Card, CardActions, CardContent, IconButton} from "@material-ui/core";
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import {
+    Chip,
+    Button,
+    Grid,
+    Typography,
+    Card,
+    CardActions,
+    CardContent,
+    IconButton
+} from '@material-ui/core';
 import {Home, Help} from "@material-ui/icons";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import StickyFooter from "./StickyFooter";
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { theme } from "./theme";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -62,7 +66,6 @@ export default function Weight() {
     return (
 
         <ThemeProvider theme={theme}>
-
         <div className='App'>
             <Card className={classes.root} elevation={3}>
                 <CardActions>
@@ -99,23 +102,12 @@ export default function Weight() {
                 <CardActions>
                     <div className={classes.bottomButton}>
                         <Button className={classes.prevButton} size="large" component={Link} to="/EditData">prev</Button>
-                        <Button className={classes.nextButton} size="large" component={Link} to="/">next</Button>
+                        <Button className={classes.nextButton} size="large" component={Link} to="/Feedback">next</Button>
                     </div>
                 </CardActions>
                 <StickyFooter/>
             </Card>
         </div>
-
         </ThemeProvider>
     );
 }
-
-
-
-const theme = createMuiTheme({
-    typography: {
-      fontFamily: [
-          'Noto Sans KR', 'sans-serif'
-      ].join(','),
-    },
-});
