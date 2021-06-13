@@ -43,7 +43,6 @@ export default function EditData() {
                 setResults(result.data);
                 setMaxsize(max);
             })
-
     }
 
     React.useEffect(() => {

@@ -7,6 +7,7 @@ import EditData from './EditData';
 import WeightData from './WeightData';
 import Explanation from './Explanation';
 import Feedback from './Feedback';
+import SelectData from './SelectData';
 
 export default class App extends Component {
     render() {
@@ -19,6 +20,7 @@ export default class App extends Component {
                     <Route path="/WeightData" component={WeightData} />
                     <Route path="/Explanation" component={Explanation} />
                     <Route path="/Feedback" component={Feedback} />
+                    <Route path='/SelectData' component={SelectData} />
                 </BrowserRouter>
             </div>
         )

@@ -74,9 +74,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Weight() {
     const classes = useStyles();
 
-    const data = JSON.parse(localStorage.getItem("DATA"));
-    const index = Object.keys(data[0]);
-    const defaultIndex = index.map((value, i) => ({key: i, label: value}));
+    const data = JSON.parse(localStorage.getItem("INPUT"));
+    const defaultIndex = data.map((value, i) => ({key: i, label: value}));
     console.log(defaultIndex);
 
     const [chipData, setChipData] = React.useState(defaultIndex);
@@ -105,7 +104,7 @@ export default function Weight() {
                         <Grid container alignItems="center">
                             <Grid item xs>
                                 <Typography gutterBottom variant="h2" className={classes.title}>
-                                    3. Choose index to give more weight <br/>
+                                    4. Choose index to give more weight <br/>
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -113,7 +112,7 @@ export default function Weight() {
                     <form onSubmit={handleSubmit}>
                         <div className={classes.section2}>
                             <Typography gutterBottom variant="body1">
-                                Select index <br/>
+                                Select index to give more weight<br/>
                             </Typography>
                             <Paper component="ul" className={classes.list}>
                                 {chipData.map((data) => {
@@ -134,8 +133,8 @@ export default function Weight() {
                 </CardContent>
                 <CardActions>
                     <div className={classes.bottomButton}>
-                        <Button className={classes.prevButton} size="large" component={Link} to="/EditData">prev</Button>
-                        <Button className={classes.nextButton} size="large" component={Link} to="/Feedback">next</Button>
+                        <Button className={classes.prevButton} size="large" component={Link} to="/SelectData">prev</Button>
+                        <Button className={classes.nextButton} size="large" component={Link} to="/Feedback">Start Regression!</Button>
                     </div>
                 </CardActions>
                 <StickyFooter/>
