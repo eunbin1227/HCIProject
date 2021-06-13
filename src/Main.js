@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         minWidth: 275,
         display: 'grid',
-        minHeight: '100vh',
+        height: '100vh',
 //       backgroundColor: 'pink',
     },
     actions: {
