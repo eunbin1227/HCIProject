@@ -8,7 +8,8 @@ import {
     Card,
     CardActions,
     CardContent,
-    IconButton
+    IconButton,
+    Paper
 } from '@material-ui/core';
 import {Home, Help} from "@material-ui/icons";
 import { Link } from "react-router-dom";
@@ -28,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(4),
     },
     section2: {
+        display: 'flex',
+        flexDirection: 'column',
         margin: theme.spacing(4),
     },
     content: {
@@ -58,13 +61,36 @@ const useStyles = makeStyles((theme) => ({
         textTransform: "none",
         marginRight: "3vw",
     },
+    list: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        listStyle: 'none',
+        padding: theme.spacing(0.5),
+        margin: 0,
+    },
 }));
 
 export default function Weight() {
     const classes = useStyles();
 
-    return (
+    const data = JSON.parse(localStorage.getItem("DATA"));
+    const index = Object.keys(data[0]);
+    const defaultIndex = index.map((value, i) => ({key: i, label: value}));
+    console.log(defaultIndex);
 
+    const [chipData, setChipData] = React.useState(defaultIndex);
+
+    const handleDelete = (chipToDelete) => () => {
+        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        localStorage.setItem('WEIGHT', JSON.stringify(chipData.map(value => value.label)));
+    }
+
+    return (
         <ThemeProvider theme={theme}>
         <div className='App'>
             <Card className={classes.root} elevation={3}>
@@ -84,20 +110,27 @@ export default function Weight() {
                             </Grid>
                         </Grid>
                     </div>
-{/*                    <Divider variant="middle"/>
-*/}
-                    <div className={classes.section2}>
-                        <Typography gutterBottom variant="body1">
-                            Select index <br/>
-                        </Typography>
-                        <div>
-                            <Chip className={classes.chip} label="Age" />
-                            <Chip className={classes.chip} color="primary" label="Sex" />
-                            <Chip className={classes.chip} label="Height" />
-                            <Chip className={classes.chip} color="primary" label="Weight" />
-                            <Chip className={classes.chip} label="Disease" />
+                    <form onSubmit={handleSubmit}>
+                        <div className={classes.section2}>
+                            <Typography gutterBottom variant="body1">
+                                Select index <br/>
+                            </Typography>
+                            <Paper component="ul" className={classes.list}>
+                                {chipData.map((data) => {
+                                    return (
+                                        <li key={data.key}>
+                                            <Chip
+                                                label={data.label}
+                                                onDelete={handleDelete(data)}
+                                                className={classes.chip}
+                                            />
+                                        </li>
+                                    );
+                                })}
+                            </Paper>
+                            <Button type='submit'> Submit </Button>
                         </div>
-                    </div>
+                    </form>
                 </CardContent>
                 <CardActions>
                     <div className={classes.bottomButton}>

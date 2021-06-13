@@ -97,7 +97,6 @@ export default function EditData() {
                             <Button type='submit'>Submit</Button>
                         </div>
                     </form>
-
                 </CardContent>
                 <CardActions>
                     <div className={classes.bottomButton}>
