@@ -20,23 +20,38 @@ import StickyFooter from "./StickyFooter";
 import {Link} from 'react-router-dom';
 import { theme } from "./theme";
 import { firestore } from "./firebase";
+import bdiag from './data/bdiag.csv';
+import diabetes from './data/diabetes.csv';
+import titanic from './data/titanic.csv';
+import SBI from './data/SBI.csv';
+
 
 
 export default function ChooseData() {
     const classes = useStyles();
     const [data, setData] = React.useState('');
+    // const [name, setName] = React.useState('');
 
     const handleChange = (event) => {
-        setData(event.target.value);
+        event.preventDefault();
+
+        fetch(event.target.value)
+            .then((r) => r.text())
+            .then(text => {
+                setData(text);
+            })
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(data);
+        console.log(typeof data);
         firestore
             .collection('Data')
             .add({data})
-            .then()
+            .then(function(docRef) {
+                localStorage.setItem('KEY', docRef.id);
+            })
     }
 
     const addFile = (e) => {
@@ -91,9 +106,10 @@ export default function ChooseData() {
                                     <MenuItem value="">
                                         <em>Choose Data</em>
                                     </MenuItem>
-                                    <MenuItem value={'CarAccident'}>CarAccident</MenuItem>
-                                    <MenuItem value={'Disease'}>Disease</MenuItem>
-                                    <MenuItem value={'StockPrice'}>StockPrice</MenuItem>
+                                    <MenuItem value={titanic}>Titanic Survivor</MenuItem>
+                                    <MenuItem value={bdiag}>Breast Cancer</MenuItem>
+                                    <MenuItem value={SBI}>Bacteria infection</MenuItem>
+                                    <MenuItem value={diabetes}>Diabetes</MenuItem>
                                 </Select>
                             </FormControl>
                             <Button type="submit"> Submit </Button>

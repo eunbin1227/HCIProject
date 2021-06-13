@@ -17,46 +17,51 @@ import { makeStyles } from '@material-ui/core/styles';
 import StickyFooter from "./StickyFooter";
 import {Link} from 'react-router-dom';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-
+import { firestore } from "./firebase";
+import {readString} from 'react-papaparse';
 
 
 export default function EditData() {
     const classes = useStyles();
-    const [size, setSize] = React.useState(0);
+    const [size, setSize] = React.useState(50);
+    const [maxsize, setMaxsize] = React.useState(0);
+    const [results, setResults] = React.useState([]);
 
-    const marks = [
-        {
-            value: 0,
-            label: '0',
-        },
-        {
-            value: 25,
-            label: '25',
-        },
-        {
-            value: 50,
-            label: '50',
-        },
-        {
-            value: 75,
-            label: '75'
-        },
-        {
-            value: 100,
-            label: '100',
-        },
-    ];
+    const dataRef = firestore.collection('Data').doc(localStorage.getItem('KEY'));
+
+    let max;
+
+    const getData = () => {
+        dataRef
+            .get()
+            .then(async (doc) =>  {
+                const res = await doc.data().data
+                const result = readString(res, {
+                    header: true
+                });
+                max = result.data.length;
+                setResults(result.data);
+                setMaxsize(max);
+            })
+
+    }
+
+    React.useEffect(() => {
+        getData();
+    }, [maxsize])
 
     function valuetext(value) {
         return `${value}`;
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        localStorage.setItem('SIZE', size.toString());
+        localStorage.setItem('DATA', JSON.stringify(results));
+    }
 
     return (
-
-        
     <ThemeProvider theme={theme}>
-
         <div className="App">
             <CssBaseline />
             <Card className={classes.root} elevation={3}>
@@ -70,24 +75,29 @@ export default function EditData() {
                     <Typography className={classes.title} variant="h1" gutterBottom>
                         2. Edit Dataset Size <br/> <br/>
                     </Typography>
-                    <div>
-                        <Typography id="discrete-slider-custom" className={classes.contains} variant="h2" gutterBottom>
-                            Slide to choose appropriate size
-                            <br/><br/><br/>
-                            Max: 100,&ensp;
-                            {/*Current dataset size : {size}*/}
-                            Current size : 62
-                            <br/>
-                        </Typography>
-                        <Slider className={classes.slider}
-                            defaultValue={62}
-                            getAriaValueText={valuetext}
-                            aria-labelledby="discrete-slider-custom"
-                            step={1}
-                            valueLabelDisplay="auto"
-                            marks={marks}
-                        />
-                    </div>
+
+                    <form onSubmit={handleSubmit}>
+                        <div className={classes.slide}>
+                            <Typography id="discrete-slider-custom" className={classes.contains} variant="h2" gutterBottom>
+                                Slide to choose appropriate size
+                                <br/><br/><br/>
+                                Max: {maxsize},&ensp;
+                                Current dataset size : {size}
+                                <br/>
+                            </Typography>
+                            <Slider className={classes.slider}
+                                    defaultValue={0}
+                                    getAriaValueText={valuetext}
+                                    aria-labelledby="discrete-slider-custom"
+                                    step={1}
+                                    valueLabelDisplay="auto"
+                                    max = {maxsize}
+                                    onChange = {(e, val) => setSize(val)}
+                            />
+                            <Button type='submit'>Submit</Button>
+                        </div>
+                    </form>
+
                 </CardContent>
                 <CardActions>
                     <div className={classes.bottomButton}>
@@ -159,4 +169,8 @@ const useStyles = makeStyles((theme) => ({
     selectEmpty: {
         marginTop: theme.spacing(2),
     },
+    slide: {
+        display: 'flex',
+        flexDirection: 'column'
+    }
 }));

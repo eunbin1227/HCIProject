@@ -46,28 +46,28 @@ export default function Explanation() {
                             <IconButton component={Link} to="/"> <Home/> </IconButton>
                             <IconButton>
                                 <Help onClick={handleClick} />
-                                <Popover
-                                    id={id}
-                                    open={open}
-                                    anchorPosition={{top:200, left:400}}
-                                    onClose={handleClose}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'center',
-                                    }}
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'center',
-                                    }}
-                                >
-                                    <Typography variant="h2" className={classes.title}>
-                                        Need Help? <br/>
-                                    </Typography>
-                                    <Typography gutterBottom variant="h4" className={classes.contact}>
-                                        Contact Us: eunbinrnt@gmail.com <br/>
-                                    </Typography>
-                                {/*    TBD */}
-                                </Popover>
+                                {/*<Popover*/}
+                                {/*    id={id}*/}
+                                {/*    open={open}*/}
+                                {/*    anchorPosition={{top:200, left:400}}*/}
+                                {/*    onClose={handleClose}*/}
+                                {/*    anchorOrigin={{*/}
+                                {/*        vertical: 'top',*/}
+                                {/*        horizontal: 'center',*/}
+                                {/*    }}*/}
+                                {/*    transformOrigin={{*/}
+                                {/*        vertical: 'top',*/}
+                                {/*        horizontal: 'center',*/}
+                                {/*    }}*/}
+                                {/*>*/}
+                                {/*    <Typography variant="h2" className={classes.title}>*/}
+                                {/*        Need Help? <br/>*/}
+                                {/*    </Typography>*/}
+                                {/*    <Typography gutterBottom variant="h4" className={classes.contact}>*/}
+                                {/*        Contact Us: eunbinrnt@gmail.com <br/>*/}
+                                {/*    </Typography>*/}
+                                {/*/!*    TBD *!/*/}
+                                {/*</Popover>*/}
                             </IconButton>
                         </div>
                     </CardActions>
@@ -91,7 +91,7 @@ export default function Explanation() {
                     <CardActions>
                         <div className={classes.bottomButton}>
                             <Button className={classes.prevButton} size="large" component={Link} to="/">prev</Button>
-                            <Button className={classes.nextButton} size="large" component={Link} to="/ChooseData">next</Button>
+                            <Button className={classes.nextButton} size="large" component={Link} onClick={()=> {localStorage.clear()}} to="/ChooseData">next</Button>
                         </div>
                     </CardActions>
                     <StickyFooter/>
