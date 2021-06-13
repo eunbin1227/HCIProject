@@ -34,22 +34,27 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 export default function ChooseData() {
     const classes = useStyles();
     const [data, setData] = React.useState('');
-    // const [name, setName] = React.useState('');
+    const [name, setName] = React.useState('');
+
+    const custom = "Custom Dataset";
 
     const handleChange = (event) => {
         event.preventDefault();
-
+        setName(event.target.value);
         fetch(event.target.value)
             .then((r) => r.text())
             .then(text => {
                 setData(text);
+                localStorage.setItem('DNAME', JSON.stringify(text));
+                console.log(text);
             })
     };
 
+
     const handleSubmit = (e) => {
-        e.preventDefault();
         console.log(data);
         console.log(typeof data);
+        e.preventDefault();
         firestore
             .collection('Data')
             .add({data})
@@ -59,9 +64,12 @@ export default function ChooseData() {
     }
 
     const addFile = (e) => {
+
         e.preventDefault();
         const file = e.target.files[0];
         const reader = new FileReader();
+
+        setName(custom);
 
         reader.onload = async (progressEvent) => {
             const data = await progressEvent.target.result;
@@ -82,7 +90,6 @@ export default function ChooseData() {
     };
 
     const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
 
     return (
     <ThemeProvider theme={theme}>
@@ -95,45 +102,45 @@ export default function ChooseData() {
                         <IconButton>
                             <Help onClick={handleClick} />
                             <Dialog  
-                            open={open} onClose={handleClose}>
-                            <DialogTitle className={classes.modalTitle}>
-                                도움말
-                            </DialogTitle>
-                            <DialogContent className={classes.modalContainer}>
-                                <DialogContentText className={classes.modalContents}>
-                                    이 웹사이트는 세 부분으로 이루어져 있습니다.                                        
-                                </DialogContentText>
-                                <DialogContentText className={classes.modalContents}>
-                                    &ensp;1. 로지스틱 회귀란 무엇인가? <br/>
-                                    &ensp;2. 로지스틱 회귀 모델 만들어보기 <br/>
-                                    &ensp;3. 로지스틱 회귀 모델 평가해보기 <br/>
-                                </DialogContentText>
-                                <DialogContentText className={classes.modalContents}>
-                                    prev를 클릭하면 이전 페이지로, 
-                                        next를 클릭하면 다음 페이지로 이동합니다.
-                                </DialogContentText>
-                                <DialogContentText className={classes.modalRef}>
-                                    참고문헌<br/>
-                                    <a href="https://curiousily.com/posts/diabetes-prediction-using-logistic-regression-with-tensorflow-js/" 
-                                    target="_blank" rel="noopener noreferrer"
-                                    style={{ textDecoration: 'none', color: 'black' }}
-                                    >
-                                        1. Javascript로 배우는 로지스틱회귀
-                                    </a>
-                                    <br/>
-                                    <a href="https://www.datacamp.com/community/tutorials/understanding-logistic-regression-python" 
+                                open={open} onClose={handleClose}>
+                                <DialogTitle className={classes.modalTitle}>
+                                    도움말
+                                </DialogTitle>
+                                <DialogContent className={classes.modalContainer}>
+                                    <DialogContentText className={classes.modalContents}>
+                                        이 웹사이트는 세 부분으로 이루어져 있습니다.                                        
+                                    </DialogContentText>
+                                    <DialogContentText className={classes.modalContents}>
+                                        &ensp;1. 로지스틱 회귀란 무엇인가? <br/>
+                                        &ensp;2. 로지스틱 회귀 모델 만들어보기 <br/>
+                                        &ensp;3. 로지스틱 회귀 모델 평가해보기 <br/>
+                                    </DialogContentText>
+                                    <DialogContentText className={classes.modalContents}>
+                                        prev를 클릭하면 이전 페이지로, 
+                                            next를 클릭하면 다음 페이지로 이동합니다.
+                                    </DialogContentText>
+                                    <DialogContentText className={classes.modalContents}>
+                                        참고문헌<br/>
+                                        <a href="https://curiousily.com/posts/diabetes-prediction-using-logistic-regression-with-tensorflow-js/" 
                                         target="_blank" rel="noopener noreferrer"
                                         style={{ textDecoration: 'none', color: 'black' }}
                                         >
-                                        2. Python으로 배우는 로지스틱회귀
-                                    </a>
-                                </DialogContentText>
+                                            1. Javascript로 배우는 로지스틱회귀
+                                        </a>
+                                        <br/>
+                                        <a href="https://www.datacamp.com/community/tutorials/understanding-logistic-regression-python" 
+                                            target="_blank" rel="noopener noreferrer"
+                                            style={{ textDecoration: 'none', color: 'black' }}
+                                            >
+                                            2. Python으로 배우는 로지스틱회귀
+                                        </a>
+                                    </DialogContentText>
 
-                                <DialogContentText className={classes.modalContact}>
-                                    Contact us: learninglogisticregression@gmail.com
-                                </DialogContentText>
-                            </DialogContent>
-                        </Dialog>
+                                    <DialogContentText className={classes.modalContact}>
+                                        Contact us: learninglogisticregression@gmail.com
+                                    </DialogContentText>
+                                </DialogContent>
+                            </Dialog>
                         </IconButton>
                     </div>
                 </CardActions>
@@ -144,7 +151,7 @@ export default function ChooseData() {
                         </Typography>
                         <FormControl className={classes.formControl}>
                             <Select
-                                value={data}
+                                value={name}
                                 onChange={handleChange}
                                 displayEmpty
                                 className={classes.selectEmpty}
@@ -157,6 +164,7 @@ export default function ChooseData() {
                                 <MenuItem value={bdiag}>Breast Cancer</MenuItem>
                                 <MenuItem value={SBI}>Bacteria infection</MenuItem>
                                 <MenuItem value={diabetes}>Diabetes</MenuItem>
+                                <MenuItem value={custom} className={classes.tmp}>내 데이터셋</MenuItem>
                             </Select>
                         </FormControl>
                         <Button className={classes.button} variant="contained" component="label">
@@ -169,7 +177,7 @@ export default function ChooseData() {
                                 hidden/>
                         </Button>
 
-                        <Button className={classes.button} type="submit"> Submit </Button>
+                        <Button className={classes.submit} type="submit"> 선택 완료 &#9989;</Button>
 
                     </form>
 
@@ -191,7 +199,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         minWidth: 275,
         display: 'grid',
-        minHeight: '100vh',
+        height: '100vh',
     },
     actions: {
         position: 'absolute',
@@ -207,7 +215,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 20,
     },
     content: {
-        height: '73vh',
+        height: '71vh',
         marginTop: 0,
         display: 'grid',
         placeContent: 'center',
@@ -240,6 +248,34 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3),
         width: 300,
         display: "grid",
+    },
+    submit: {
+        margin: theme.spacing(3),
+        width: 300,
+        fontSize: 20,
+        fontWeight: 500,
+        display: "grid",
+    },
+    modalTitle: {
+        color: 'black',
+        fontWeight: 500,
+        height: '10vh',
+        padding: '3vh',
+    },
+    modalContainer: {
+        height:'40vh',
+    },
+    modalContents: {
+        color: 'black',
+        textAlign: 'justify',
+        margin: '1vh',
+    },  
+    modalContact: {
+        textAlign: 'right'
+    },
+    tmp: {
+        display: 'none',
     }
+
 }));
 

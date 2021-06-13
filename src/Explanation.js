@@ -68,7 +68,7 @@ export default function Explanation() {
                                         prev를 클릭하면 이전 페이지로, 
                                             next를 클릭하면 다음 페이지로 이동합니다.
                                     </DialogContentText>
-                                    <DialogContentText className={classes.modalRef}>
+                                    <DialogContentText className={classes.modalContents}>
                                         참고문헌<br/>
                                         <a href="https://curiousily.com/posts/diabetes-prediction-using-logistic-regression-with-tensorflow-js/" 
                                         target="_blank" rel="noopener noreferrer"
@@ -187,11 +187,22 @@ const useStyles = makeStyles((theme) => ({
         textTransform: "none",
         marginRight: "6vw",
     },
-    typography: {
-
+    modalTitle: {
+        color: 'black',
+        fontWeight: 500,
+        height: '10vh',
+        padding: '3vh',
     },
-    contact: {
-
-    }
+    modalContainer: {
+        height:'40vh',
+    },
+    modalContents: {
+        color: 'black',
+        textAlign: 'justify',
+        margin: '1vh',
+    },  
+    modalContact: {
+        textAlign: 'right'
+    } 
 }));
 

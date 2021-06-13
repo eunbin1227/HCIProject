@@ -72,7 +72,8 @@ const useStyles = makeStyles((theme) => ({
 //        backgroundColor: 'blue',
     },
     content: {
-        height: '65vh',
+        height: '60vh',
+        paddingTop: '20vh',
         display: 'grid',
         placeItems: 'center',
 //        backgroundColor: 'grey',
