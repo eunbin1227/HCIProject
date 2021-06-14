@@ -102,7 +102,6 @@ export default function Weight() {
 
     const data = JSON.parse(localStorage.getItem("INPUT"));
     const defaultIndex = data.map((value, i) => ({key: i, label: value}));
-    console.log(defaultIndex);
 
     const [chipData, setChipData] = React.useState(defaultIndex);
 

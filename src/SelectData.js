@@ -128,6 +128,11 @@ export default function SelectData() {
         e.preventDefault();
         localStorage.setItem('INPUT', JSON.stringify(chipData.map(value => value.label)));
         localStorage.setItem('OUTPUT', JSON.stringify(outputCandidate[0].label));
+        const outputIndex = data.map((elem) => elem[outputCandidate[0].label]);
+        const newOutIndex = outputIndex.filter((elem, i) => elem !== undefined);
+        const set = new Set(newOutIndex);
+        const res = [...set];
+        localStorage.setItem('OUTINDEX', JSON.stringify(res));
     }
 
     const [anchorEl, setAnchorEl] = React.useState(null);

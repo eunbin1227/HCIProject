@@ -10,6 +10,7 @@ import Feedback from './Feedback';
 import SelectData from './SelectData';
 import MakeModel from './MakeModel';
 import WrapUp from './WrapUp';
+import Manual from './Manual';
 
 export default class App extends Component {
     render() {
@@ -25,6 +26,7 @@ export default class App extends Component {
                     <Route path='/SelectData' component={SelectData} />
                     <Route path='/MakeModel' component={MakeModel} />
                     <Route path='/WrapUp' component={WrapUp} />
+                    <Route path='/Manual' component={Manual} />
                 </BrowserRouter>
             </div>
         )

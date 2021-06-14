@@ -64,7 +64,8 @@ export default function EditData() {
     }
 
     React.useEffect(() => {
-        getData();}, [maxsize])
+        getData();},
+        [maxsize])
 
     function valuetext(value) {
         return `${value}`;
@@ -252,12 +253,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 20,
         paddingTop: '5vh',
         paddingBottom: '5vh',
-    },
-    content: {
-        height: '75vh',
-        marginTop: 0,
-        display: 'grid',
-        placeContent: 'center',
     },
     sliderContainer: {
         paddingBottom: '3vh',

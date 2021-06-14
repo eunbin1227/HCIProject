@@ -30,7 +30,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 
-
 export default function ChooseData() {
     const classes = useStyles();
     const [data, setData] = React.useState('');

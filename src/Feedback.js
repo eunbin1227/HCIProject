@@ -108,7 +108,7 @@ export default function Feedback() {
                             <Grid container alignItems="center">
                                 <Grid item xs>
                                     <Typography gutterBottom variant="h2" className={classes.title}>
-                                        7. Feedback <br/>
+                                        9. Feedback <br/>
                                     </Typography>
                                 </Grid>
                             </Grid>
