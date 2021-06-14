@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     CssBaseline,
     Button,
@@ -7,7 +7,6 @@ import {
     CardActions,
     CardContent,
     IconButton,
-    Slider,
 } from '@material-ui/core';
 import {
     Home,
@@ -17,22 +16,26 @@ import { makeStyles } from '@material-ui/core/styles';
 import StickyFooter from "./StickyFooter";
 import {Link} from 'react-router-dom';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { firestore } from "./firebase";
-import {readString} from 'react-papaparse';
+import LogisticRegression from 'ml-logistic-regression';
+import { ProgressBar } from "primereact/progressbar";
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import * as d3 from 'd3';
+import * as _ from 'lodash';
+import { Matrix } from 'ml-matrix';
 
 
-export default function EditData() {
-    const classes = useStyles();
-    const [size, setSize] = React.useState(0);
-    const [train, setTrainSize] = React.useState(0);
-    const [maxsize, setMaxsize] = React.useState(0);
-    const [results, setResults] = React.useState([]);
+import diabetes from './data/diabetes.csv';
 
-    const dataRef = firestore.collection('Data').doc(localStorage.getItem('KEY'));
+
+export default function MakeModel() {
+
+
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
@@ -43,43 +46,76 @@ export default function EditData() {
         setAnchorEl(null);
     };
 
+    const [acc, setAcc] = useState(null);
+
     const open = Boolean(anchorEl);
+    
+    const [progressBarValue, setProgressBarValue] = useState(30 + Math.floor(Math.random() * 50));
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setProgressBarValue((prev) => {
+          if (prev >= 95) {
+            clearInterval(intervalId);
+            setAcc(right/test * 100);
+            localStorage.setItem('ACC', JSON.stringify(acc));
+            return 100;
+          } else {
+              const ret = Math.floor(prev + Math.random() * 20)
+            return ret > 100? 100: ret;
+          }
+        });
+      }, 1000);
+      return () => clearInterval(intervalId);
+    }, []);
 
+    const classes = useStyles();
 
-    let max;
+    const d = JSON.parse(localStorage.getItem("DATA"));
+    const features = JSON.parse(localStorage.getItem("INPUT"));
+    const weight = JSON.parse(localStorage.getItem("WEIGHT"));
+    const train = JSON.parse(localStorage.getItem("TRAIN"));
+    const test = JSON.parse(localStorage.getItem("TEST"));
+    const output = JSON.parse(localStorage.getItem("OUTPUT"));
 
-    const getData = () => {
-        dataRef
-            .get()
-            .then(async (doc) =>  {
-                const res = await doc.data().data
-                const result = readString(res, {
-                    header: true
-                });
-                max = result.data.length;
-                setResults(result.data);
-                setMaxsize(max);
-            })
+    let data = d3.shuffle(d).slice(0, train+test);
 
+    let result = []
+    for(let i = 0; i < features.length; i++) {
+        result[i] = _.map(data, features[i]).map(Number);
+        if(features[i] === weight[0]) {
+            result[i] = result[i].map(function(x) { return x * 2});
+        }
+    }        
+
+    const finalData = result[0].map((_, colIndex) => result.map(row => row[colIndex]));
+    const yData = _.map(data, output).map(Number);
+
+    let Xtrain = finalData.slice(0, train);
+    let Ytrain = yData.slice(0, train);
+    Xtrain = new Matrix(Xtrain);
+    Ytrain = Matrix.columnVector(Ytrain);
+
+    let Xtest = finalData.slice(train, train+test);
+        const check = Xtest.slice(0, 10);
+    let Ytest = yData.slice(train, train+test);
+    Xtest = new Matrix(Xtest);
+
+    const logreg = new LogisticRegression({ numSteps: 1000, learningRate: 5e-2 });
+    logreg.train(Xtrain, Ytrain);
+
+    const finalResults = logreg.predict(Xtest);
+
+    let right = 0;
+    for(let i = 0; i < test; i++) {
+        if(finalResults[i] === Ytest[i]) {
+            right++;
+        }
     }
 
-    React.useEffect(() => {
-        getData();}, [maxsize])
-
-    function valuetext(value) {
-        return `${value}`;
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        localStorage.setItem('DATA', JSON.stringify(results));
-        localStorage.setItem('TRAIN', train.toString());
-        const test = size - train;
-        localStorage.setItem('TEST', test.toString());
-    }
-
-    return (
+      return (
+        
     <ThemeProvider theme={theme}>
+
         <div className="App">
             <CssBaseline />
             <Card className={classes.root} elevation={3}>
@@ -133,49 +169,22 @@ export default function EditData() {
                 </CardActions>
                 <CardContent className={classes.content}>
                     <Typography className={classes.title} variant="h1" gutterBottom>
-                        3. 데이터셋 사이즈 결정하기 <br/> <br/>
+                        6. 로지스틱 회귀 모형 만들기 <br/> <br/>
                     </Typography>
+                    
+                    <ProgressBar
+                        className="classes.progressbar"
+                        value={progressBarValue}
+                    ></ProgressBar>             
 
-                    <form onSubmit={handleSubmit}>
-                        <Typography id="discrete-slider-custom" className={classes.config1} variant="h2" gutterBottom>
-                            {/*Current dataset size : {size}*/}
-                            1) 데이터셋 크기 결정:&ensp;{size}/{maxsize}의 데이터 선택
-                        </Typography>
-                        <div className={classes.sliderContainer}>
-                            <Slider className={classes.slider}
-                                    defaultValue={0}
-                                    getAriaValueText={valuetext}
-                                    aria-labelledby="discrete-slider-custom"
-                                    step={1}
-                                    valueLabelDisplay="auto"
-                                    max = {maxsize}
-                                    onChange = {(e, val) => setSize(val)}
-                            />
-                        </div>
-
-                        <Typography id="discrete-slider-custom" className={classes.config2} variant="h2" gutterBottom>
-                            {/*Current dataset size : {size}*/}
-                            2) 학습 데이터셋 : 훈련 데이터셋&ensp;=&ensp;{train}:{size-train}
-                        </Typography>
-                        <div className={classes.sliderContainer}>
-                            <Slider className={classes.slider}
-                                    defaultValue={0}
-                                    getAriaValueText={valuetext}
-                                    aria-labelledby="discrete-slider-custom"
-                                    step={1}
-                                    valueLabelDisplay="auto"
-                                    max = {size}
-                                    onChange = {(e, val) => setTrainSize(val)}
-                            />
-                        </div>
-
-                        <Button className={classes.submit} type="submit"> 선택 완료 &#9989;</Button>
-                    </form>
+                    <Typography className={classes.contains} >
+                        정확도: {acc}%
+                    </Typography>
                 </CardContent>
                 <CardActions>
                     <div className={classes.bottomButton}>
-                        <Button className={classes.prevButton} size="large" component={Link} to="/ChooseData">prev</Button>
-                        <Button className={classes.nextButton} size="large" component={Link} to="/SelectData">next</Button>
+                        <Button className={classes.prevButton} size="large" component={Link} to="/WeightData">prev</Button>
+                        <Button className={classes.nextButton} size="large" component={Link} to="/FeedBack">next</Button>
                     </div>
                 </CardActions>
                 <StickyFooter/>
@@ -202,18 +211,20 @@ const useStyles = makeStyles((theme) => ({
         minHeight: '100vh',
     },
     title: {
-        marginTop: theme.spacing(5),
         fontSize: 40,
     },
     contains: {
-        fontSize: 20,
-        paddingBottom: '10vh',
+        fontSize: 17,
+        paddingTop: '7vh',
     },
     content: {
         height: '75vh',
         marginTop: 0,
         display: 'grid',
         placeContent: 'center',
+    },
+    slider: {
+        width: '50vw',
     },
     actions: {
         position: 'absolute',
@@ -240,36 +251,9 @@ const useStyles = makeStyles((theme) => ({
     selectEmpty: {
         marginTop: theme.spacing(2),
     },
-    slide: {
-        display: 'flex',
-        flexDirection: 'column'
-    },
-    config1: {
-        fontSize: 20,
-        paddingBottom: '5vh',
-    },
-    config2: {
-        fontSize: 20,
-        paddingTop: '5vh',
-        paddingBottom: '5vh',
-    },
-    content: {
-        height: '75vh',
-        marginTop: 0,
-        display: 'grid',
-        placeContent: 'center',
-    },
-    sliderContainer: {
-        paddingBottom: '3vh',
-    },
-    slider: {
-        width: '40vw',
-        paddingBottom: '3vh',
-    },
-    submit: {
-        width: 300,
-        fontSize: 20,
-        fontWeight: 500,
+    progressbar: {
+        padding: '5vh',
+        
     },
     modalTitle: {
         color: 'black',
@@ -287,6 +271,6 @@ const useStyles = makeStyles((theme) => ({
     },  
     modalContact: {
         textAlign: 'right'
-    } ,
+    } 
 
 }));

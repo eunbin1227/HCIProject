@@ -18,7 +18,6 @@ import StickyFooter from "./StickyFooter";
 import {theme} from "./theme";
 import { firestore } from './firebase';
 
-
 const labels = {
     0.5: 'Useless',
     1: 'Useless+',
@@ -109,7 +108,7 @@ export default function Feedback() {
                             <Grid container alignItems="center">
                                 <Grid item xs>
                                     <Typography gutterBottom variant="h2" className={classes.title}>
-                                        6. Feedback <br/>
+                                        7. Feedback <br/>
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -147,8 +146,8 @@ export default function Feedback() {
                     </CardContent>
                     <CardActions>
                         <div className={classes.bottomButton}>
-                            <Button className={classes.prevButton} size="large" component={Link} to="/EditData">prev</Button>
-                            <Button className={classes.nextButton} size="large" component={Link} to="/Feedback">next</Button>
+                            <Button className={classes.prevButton} size="large" component={Link} to="/MakeModel">prev</Button>
+                            <Button className={classes.nextButton} size="large" component={Link} to="/">end</Button>
                         </div>
                     </CardActions>
                     <StickyFooter/>

@@ -41,7 +41,7 @@ export default function Main() {
             <CardActions>
                 <div className={classes.bottomButton}>
                     <Button className={classes.nextButton} size="medium" component={Link} to="/Explanation">next</Button>
-                    <Button className={classes.skipButton} size="medium" component={Link} to="/ChooseData">skip explanation</Button>
+                    <Button className={classes.skipButton} size="medium" component={Link} onClick={() => {localStorage.clear()}} to="/ChooseData">skip explanation</Button>
                 </div>
             </CardActions>
             <StickyFooter/>
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         minWidth: 275,
         display: 'grid',
-        minHeight: '100vh',
+        height: '100vh',
 //       backgroundColor: 'pink',
     },
     actions: {
@@ -72,7 +72,8 @@ const useStyles = makeStyles((theme) => ({
 //        backgroundColor: 'blue',
     },
     content: {
-        height: '65vh',
+        height: '60vh',
+        paddingTop: '20vh',
         display: 'grid',
         placeItems: 'center',
 //        backgroundColor: 'grey',

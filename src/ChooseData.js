@@ -19,56 +19,168 @@ import { makeStyles, ThemeProvider} from '@material-ui/core/styles';
 import StickyFooter from "./StickyFooter";
 import {Link} from 'react-router-dom';
 import { theme } from "./theme";
+import { firestore } from "./firebase";
+import bdiag from './data/bdiag.csv';
+import diabetes from './data/diabetes.csv';
+import titanic from './data/titanic.csv';
+import SBI from './data/SBI.csv';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 
 export default function ChooseData() {
     const classes = useStyles();
     const [data, setData] = React.useState('');
+    const [name, setName] = React.useState('');
+
+    const custom = "Custom Dataset";
 
     const handleChange = (event) => {
-        setData(event.target.value);
+        event.preventDefault();
+        setName(event.target.value);
+        fetch(event.target.value)
+            .then((r) => r.text())
+            .then(text => {
+                setData(text);
+                localStorage.setItem('DNAME', JSON.stringify(text));
+                console.log(text);
+            })
     };
+
+
+    const handleSubmit = (e) => {
+        console.log(data);
+        console.log(typeof data);
+        e.preventDefault();
+        firestore
+            .collection('Data')
+            .add({data})
+            .then(function(docRef) {
+                localStorage.setItem('KEY', docRef.id);
+            })
+    }
+
+    const addFile = (e) => {
+
+        e.preventDefault();
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        setName(custom);
+
+        reader.onload = async (progressEvent) => {
+            const data = await progressEvent.target.result;
+            setData(data);
+        }
+        reader.readAsText(file);
+    }
+
+    
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
 
     return (
     <ThemeProvider theme={theme}>
-
         <div className="App">
             <CssBaseline />
             <Card className={classes.root} elevation={3}>
                 <CardActions>
                     <div className={classes.actions}>
                         <IconButton component={Link} to="/"> <Home/> </IconButton>
-                        <IconButton> <Help/> </IconButton>
+                        <IconButton>
+                            <Help onClick={handleClick} />
+                            <Dialog  
+                                open={open} onClose={handleClose}>
+                                <DialogTitle className={classes.modalTitle}>
+                                    도움말
+                                </DialogTitle>
+                                <DialogContent className={classes.modalContainer}>
+                                    <DialogContentText className={classes.modalContents}>
+                                        이 웹사이트는 세 부분으로 이루어져 있습니다.                                        
+                                    </DialogContentText>
+                                    <DialogContentText className={classes.modalContents}>
+                                        &ensp;1. 로지스틱 회귀란 무엇인가? <br/>
+                                        &ensp;2. 로지스틱 회귀 모델 만들어보기 <br/>
+                                        &ensp;3. 로지스틱 회귀 모델 평가해보기 <br/>
+                                    </DialogContentText>
+                                    <DialogContentText className={classes.modalContents}>
+                                        prev를 클릭하면 이전 페이지로, 
+                                            next를 클릭하면 다음 페이지로 이동합니다.
+                                    </DialogContentText>
+                                    <DialogContentText className={classes.modalContents}>
+                                        참고문헌<br/>
+                                        <a href="https://curiousily.com/posts/diabetes-prediction-using-logistic-regression-with-tensorflow-js/" 
+                                        target="_blank" rel="noopener noreferrer"
+                                        style={{ textDecoration: 'none', color: 'black' }}
+                                        >
+                                            1. Javascript로 배우는 로지스틱회귀
+                                        </a>
+                                        <br/>
+                                        <a href="https://www.datacamp.com/community/tutorials/understanding-logistic-regression-python" 
+                                            target="_blank" rel="noopener noreferrer"
+                                            style={{ textDecoration: 'none', color: 'black' }}
+                                            >
+                                            2. Python으로 배우는 로지스틱회귀
+                                        </a>
+                                    </DialogContentText>
+
+                                    <DialogContentText className={classes.modalContact}>
+                                        Contact us: learninglogisticregression@gmail.com
+                                    </DialogContentText>
+                                </DialogContent>
+                            </Dialog>
+                        </IconButton>
                     </div>
                 </CardActions>
-                <CardContent className={classes.content}>
-                    <Typography className={classes.title} variant="h1" gutterBottom>
-                        1. Choose Dataset <br/> <br/>
-                    </Typography>
-                    <Button variant="contained" component="label">
-                        Upload File
-                        <input type="file" hidden/>
-                    </Button>
-                    <Typography className={classes.contains} variant="h2" gutterBottom>
-                        <br/> <br/>
-                        * Example Dataset
-                    </Typography>
-                    <FormControl className={classes.formControl}>
-                        <Select
-                            value={data}
-                            onChange={handleChange}
-                            displayEmpty
-                            className={classes.selectEmpty}
-                            inputProps={{ 'aria-label': 'Without label' }}
-                        >
-                            <MenuItem value="">
-                                <em>Choose Data</em>
-                            </MenuItem>
-                            <MenuItem value={'CarAccident'}>CarAccident</MenuItem>
-                            <MenuItem value={'Disease'}>Disease</MenuItem>
-                            <MenuItem value={'StockPrice'}>StockPrice</MenuItem>
-                        </Select>
-                    </FormControl>
+                <CardContent >
+                    <form className={classes.content} onSubmit={handleSubmit}>
+                        <Typography className={classes.title} variant="h1" gutterBottom>
+                            2. 데이터셋 선택하기 <br/> <br/>
+                        </Typography>
+                        <FormControl className={classes.formControl}>
+                            <Select
+                                value={name}
+                                onChange={handleChange}
+                                displayEmpty
+                                className={classes.selectEmpty}
+                                inputProps={{ 'aria-label': 'Without label' }}
+                            >
+                                <MenuItem value="">
+                                    <em>데이터셋 선택</em>
+                                </MenuItem>
+                                <MenuItem value={titanic}>Titanic Survivor</MenuItem>
+                                <MenuItem value={bdiag}>Breast Cancer</MenuItem>
+                                <MenuItem value={SBI}>Bacteria infection</MenuItem>
+                                <MenuItem value={diabetes}>Diabetes</MenuItem>
+                                <MenuItem value={custom} className={classes.tmp}>내 데이터셋</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <Button className={classes.button} variant="contained" component="label">
+                            <Typography style={{ textTransform: 'lowercase'}}>
+                                내 데이터셋 업로드 (.csv, .xlsx)
+                            </Typography>
+                            <input
+                                type="file"
+                                onChange={addFile}
+                                hidden/>
+                        </Button>
+
+                        <Button className={classes.submit} type="submit"> 선택 완료 &#9989;</Button>
+
+                    </form>
+
                 </CardContent>
                 <CardActions>
                     <div className={classes.bottomButton}>
@@ -87,7 +199,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         minWidth: 275,
         display: 'grid',
-        minHeight: '100vh',
+        height: '100vh',
     },
     actions: {
         position: 'absolute',
@@ -103,10 +215,12 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 20,
     },
     content: {
-        height: '75vh',
+        height: '71vh',
         marginTop: 0,
         display: 'grid',
         placeContent: 'center',
+        justifyItems: 'center',
+        textAlign: 'center',
     },
     bottomButton: {
         marginLeft: 'auto',
@@ -123,10 +237,45 @@ const useStyles = makeStyles((theme) => ({
     },
     formControl: {
         margin: theme.spacing(1),
-        minWidth: 120,
+        width: 400,
+        padding: theme.spacing(3),
+        display: "grid",
     },
     selectEmpty: {
         marginTop: theme.spacing(3),
+    },
+    button: {
+        margin: theme.spacing(3),
+        width: 300,
+        display: "grid",
+    },
+    submit: {
+        margin: theme.spacing(3),
+        width: 300,
+        fontSize: 20,
+        fontWeight: 500,
+        display: "grid",
+    },
+    modalTitle: {
+        color: 'black',
+        fontWeight: 500,
+        height: '10vh',
+        padding: '3vh',
+    },
+    modalContainer: {
+        height:'40vh',
+    },
+    modalContents: {
+        color: 'black',
+        textAlign: 'justify',
+        margin: '1vh',
+    },  
+    modalContact: {
+        textAlign: 'right'
+    },
+    tmp: {
+        display: 'none',
     }
+
 }));
 

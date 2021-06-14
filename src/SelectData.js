@@ -27,18 +27,18 @@ const useStyles = makeStyles((theme) => ({
         minHeight: '100vh',
     },
     chip: {
-        margin: theme.spacing(1),
+        margin: theme.spacing(0.5),
+        fontSize: 12,
     },
     section1: {
         margin: theme.spacing(4),
     },
     section2: {
-        flexDirection: 'column',
-        margin: theme.spacing(4),
-        textAlign: 'center',
+        display: 'flex',
+        flexDirection: 'column',        
     },
     content: {
-        height: '75vh',
+        minHeight: '75vh',
         marginTop: 0,
         display: 'grid',
         placeContent: 'center',
@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         fontSize: 40,
+        alignContent: 'center',
     },
     bottomButton: {
         marginLeft: 'auto',
@@ -66,12 +67,18 @@ const useStyles = makeStyles((theme) => ({
     },
     list: {
         display: 'flex',
+        width: '80vw',
+        minHeight: '10vh',
         justifyContent: 'center',
         flexWrap: 'wrap',
         listStyle: 'none',
-        minHeight: '10vh',
         padding: theme.spacing(0.5),
-        marginBottom: theme.spacing(5),
+        margin: 5,
+    },
+    explain: {
+        fontWeight: 550,
+        marginTop: 20,
+        marginBottom: 5,
     },
     submit: {
         width: 300,
@@ -97,24 +104,31 @@ const useStyles = makeStyles((theme) => ({
     } 
 }));
 
-export default function Weight() {
+export default function SelectData() {
     const classes = useStyles();
 
-    const data = JSON.parse(localStorage.getItem("INPUT"));
-    const defaultIndex = data.map((value, i) => ({key: i, label: value}));
-    console.log(defaultIndex);
+    const data = JSON.parse(localStorage.getItem("DATA"));
+    const index = Object.keys(data[0]);
+    const defaultIndex = index.map((value, i) => ({key: i, label: value}));
 
     const [chipData, setChipData] = React.useState(defaultIndex);
+    const [outputCandidate, setOutputCandidate] = React.useState([]);
 
     const handleDelete = (chipToDelete) => () => {
         setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+        const obj = {key: chipToDelete.key, label: chipToDelete.label};
+        setOutputCandidate(prevState => [...prevState, obj]);
     };
+
+    const handleDeleteOutput = (chipToDelete) => () => {
+        setOutputCandidate((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        localStorage.setItem('WEIGHT', JSON.stringify(chipData.map(value => value.label)));
+        localStorage.setItem('INPUT', JSON.stringify(chipData.map(value => value.label)));
+        localStorage.setItem('OUTPUT', JSON.stringify(outputCandidate[0].label));
     }
-
 
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -128,15 +142,14 @@ export default function Weight() {
 
     const open = Boolean(anchorEl);
 
-
     return (
         <ThemeProvider theme={theme}>
-        <div className='App'>
-            <Card className={classes.root} elevation={3}>
-                <CardActions>
-                    <div className={classes.actions}>
-                        <IconButton component={Link} to="/"> <Home/> </IconButton>
-                        <IconButton>
+            <div className='App'>
+                <Card className={classes.root} elevation={3}>
+                    <CardActions>
+                        <div className={classes.actions}>
+                            <IconButton component={Link} to="/"> <Home/> </IconButton>
+                            <IconButton>
                                 <Help onClick={handleClick} />
                                 <Dialog  
                                 open={open} onClose={handleClose}>
@@ -179,50 +192,65 @@ export default function Weight() {
                                 </DialogContent>
                             </Dialog>
                             </IconButton>
-
-                    </div>
-                </CardActions>
-                <CardContent className={classes.content}>
-                    <div className={classes.section1}>
-                        <Grid container alignItems="center">
-                            <Grid item xs>
-                                <Typography gutterBottom variant="h2" className={classes.title}>
-                                    5. 비중을 높일 인덱스 고르기 <br/>
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    </div>
-                    <form onSubmit={handleSubmit}>
-                        <div className={classes.section2}>
-                            <Typography gutterBottom variant="body1">
-                                비중을 높이고 싶은 인덱스만 남겨주세요 (1개) <br/>
-                            </Typography>
-                            <Paper component="ul" className={classes.list}>
-                                {chipData.map((data) => {
-                                    return (
-                                        <li key={data.key}>
-                                            <Chip
-                                                label={data.label}
-                                                onDelete={handleDelete(data)}
-                                                className={classes.chip}
-                                            />
-                                        </li>
-                                    );
-                                })}
-                            </Paper>
-                            <Button className={classes.submit} type="submit"> 선택 완료 &#9989;</Button>
                         </div>
-                    </form>
-                </CardContent>
-                <CardActions>
-                    <div className={classes.bottomButton}>
-                       <Button className={classes.prevButton} size="large" component={Link} to="/SelectData">prev</Button>
-                        <Button className={classes.nextButton} size="large" component={Link} to="/MakeModel">Start Regression!</Button>
-                    </div>
-                </CardActions>
-                <StickyFooter/>
-            </Card>
-        </div>
+                    </CardActions>
+                    <CardContent className={classes.content}>
+                        <div className={classes.section1}>
+                            <Grid container alignItems="center">
+                                <Grid item xs>
+                                    <Typography gutterBottom variant="h2" className={classes.title}>
+                                        4. 인풋/아웃풋 선택하기 <br/>
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </div>
+                        <form onSubmit={handleSubmit}>
+                            <div className={classes.section2}>
+                                <Typography gutterBottom variant="body1" className={classes.explain}>
+                                    학습에 사용할 인풋 인덱스만 남겨주세요 <br/>
+                                </Typography>
+                                <Paper component="ul" className={classes.list}>
+                                    {chipData.map((data) => {
+                                        return (
+                                            <li key={data.key}>
+                                                <Chip
+                                                    label={data.label}
+                                                    onDelete={handleDelete(data)}
+                                                    className={classes.chip}
+                                                />
+                                            </li>
+                                        );
+                                    })}
+                                </Paper>
+                                <Typography gutterBottom variant="body1" className={classes.explain}>
+                                    예측값을 얻고 싶은 아웃풋 인덱스만 남겨주세요 (1개)<br/>
+                                </Typography>
+                                <Paper component="ul" className={classes.list}>
+                                    {outputCandidate.map((data) => {
+                                        return (
+                                            <li key={data.key}>
+                                                <Chip
+                                                    label={data.label}
+                                                    onDelete={handleDeleteOutput(data)}
+                                                    className={classes.chip}
+                                                />
+                                            </li>
+                                        );
+                                    })}
+                                </Paper>
+                            </div>
+                            <Button className={classes.submit} type="submit"> 선택 완료 &#9989;</Button>
+                        </form>
+                    </CardContent>
+                    <CardActions>
+                        <div className={classes.bottomButton}>
+                            <Button className={classes.prevButton} size="large" component={Link} to="/EditData">prev</Button>
+                            <Button className={classes.nextButton} size="large" component={Link} to="/WeightData">next</Button>
+                        </div>
+                    </CardActions>
+                    <StickyFooter/>
+                </Card>
+            </div>
         </ThemeProvider>
     );
 }
