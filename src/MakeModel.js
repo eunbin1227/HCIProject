@@ -28,6 +28,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
 import { Matrix } from 'ml-matrix';
+import { theme } from './theme';
 
 
 export default function MakeModel() {
@@ -43,6 +44,7 @@ export default function MakeModel() {
     };
 
     const [acc, setAcc] = useState(null);
+    const [flag, setFlag] = useState(false);
 
     const open = Boolean(anchorEl);
     
@@ -53,6 +55,7 @@ export default function MakeModel() {
           if (prev >= 95) {
             clearInterval(intervalId);
             setAcc(right/test * 100);
+            if(!flag) setFlag(true);
             localStorage.setItem('ACC', JSON.stringify(acc));
             return 100;
           } else {
@@ -62,7 +65,7 @@ export default function MakeModel() {
         });
       }, 1000);
       return () => clearInterval(intervalId);
-    }, []);
+    }, [flag]);
 
     const classes = useStyles();
 
@@ -167,11 +170,11 @@ export default function MakeModel() {
                             6. 로지스틱 회귀 모형 만들기 <br/> <br/>
                         </Typography>
                         <ProgressBar
-                            className="classes.progressbar"
+                            className={classes.progressbar}
                             value={progressBarValue}
                         ></ProgressBar>
                         <Typography className={classes.contains} >
-                            정확도: {acc}%
+                            정확도: {localStorage.getItem('ACC')}%
                         </Typography>
                     </CardContent>
                     <CardActions>
@@ -186,15 +189,6 @@ export default function MakeModel() {
             </ThemeProvider>
     );
 }
-
-
-const theme = createMuiTheme({
-    typography: {
-      fontFamily: [
-          'Noto Sans KR', 'sans-serif'
-      ].join(','),
-    },
-});
 
 
 const useStyles = makeStyles((theme) => ({
